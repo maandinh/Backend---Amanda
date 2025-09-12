@@ -9,6 +9,7 @@ const router = require('./router');
 // 2. Criar uma instância da aplicação
     const app = express();
 
+    
 // moddleware embutido ou integrado
 app.use(express.json());
 // ?param1=valor1&param2=valor2..

@@ -13,6 +13,8 @@ describe('Testes do recurso /tarefas', () => {
             const response = await request.post(url).send({nome: "Estudar"});
             expect(response.status).toBe(201);
             expect(response.body.id).toBeDefined();
+            expect(response.body.nome).toBe("Estudar");
+            expect(response.body.concluida).toBe(false);
             id=response.body.id;
     });
 
@@ -27,6 +29,12 @@ describe('Testes do recurso /tarefas', () => {
         const response = await request.get(`${url}/${id}`);
         expect(response.status).toBe(200);
         expect(response.body.id).toBeDefined();
+    });
+
+    test('GET /id deve retornar 404', async() => {
+        const response = await request.get(`${url}/000000000000000000000000`);
+        expect(response.status).toBe(404);
+        expect(response.body.msg).toBe("Tarefa não encontrada");
     });
 
     test('PUT /id deve retornar 200', async() => {

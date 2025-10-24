@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/', controller.criar);
 
 router.get('/', controller.listar);
-
+ 
 router.get('/:id', controller.buscar, controller.exibir);
 
 router.put('/:id', controller.buscar, controller.atualizar);

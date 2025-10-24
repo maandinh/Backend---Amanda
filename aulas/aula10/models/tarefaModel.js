@@ -10,4 +10,4 @@ const schema = new mongoose.Schema({
     concluida: Boolean
 });
 
-module.exports = mongoose.model('Tarefa', schema);
+module.exports = mongoose.model("Produto", schema);

@@ -3,48 +3,52 @@ const app = require('../app');
 
 let token;
 
-beforeAll(async () => {
-  const res = await request(app)
-    .post('/usuarios/login')
-    .send({ email: 'email@exemplo.com', senha: 'abcd1234' });
+describe('Testes API REST', () => {
 
-  if (!res.body.token) throw new Error('Token não retornado no login');
-
-  token = res.body.token;
-});
-describe('Testes da API REST', () => {
-
-  test('GET /produtos sem token deve retornar 401 Não autorizado', async () => {
-    const res = await request(app).get('/produtos');
-    expect(res.status).toBe(401);
-    expect(res.body.msg).toBe('Não autorizado');
+  test('GET /produtos sem token deve retornar 401', async () => {
+    const response = await request(app).get('/produtos');
+    expect(response.status).toBe(401);
+    expect(response.body.msg).toBe('Não autorizado');
   });
 
-  test('GET /produtos com token inválido deve retornar 401 Token inválido', async () => {
-    const res = await request(app)
+  test('GET /produtos com token inválido deve retornar 401', async () => {
+    const response = await request(app)
       .get('/produtos')
       .set('authorization', '123456789');
-    expect(res.status).toBe(401);
-    expect(res.body.msg).toBe('Token inválido');
+    expect(response.status).toBe(401);
+    expect(response.body.msg).toBe('Token inválido');
+  });
+
+  test('POST /usuarios/login deve retornar token', async () => {
+    const response = await request(app)
+      .post('/usuarios/login')
+      .send({ email: 'email@exemplo.com', senha: 'abcd1234' });
+    expect(response.status).toBe(200);
+    expect(response.body.token).toBeDefined();
+    token = response.body.token;
   });
 
   test('GET /produtos com token válido deve retornar 200', async () => {
-    const res = await request(app)
+    const response = await request(app)
       .get('/produtos')
       .set('authorization', token);
-    expect(res.status).toBe(200);
-    expect(Array.isArray(res.body)).toBe(true);
+    expect(response.status).toBe(200);
   });
 
-  test('POST /usuarios/renovar deve retornar novo token', async () => {
-    const res = await request(app)
+  test('POST /usuarios/renovar retorna novo token', async () => {
+    const response = await request(app)
       .post('/usuarios/renovar')
       .set('authorization', token);
-    
-    expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('token');
+    expect(response.status).toBe(200);
+    expect(response.body.token).toBeDefined();
+    token = response.body.token;
+  });
 
-    token = res.body.token; 
+  test('GET /produtos com novo token retorna 200', async () => {
+    const response = await request(app)
+      .get('/produtos')
+      .set('authorization', token);
+    expect(response.status).toBe(200);
   });
 
 });

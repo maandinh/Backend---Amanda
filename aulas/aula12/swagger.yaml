@@ -1,0 +1,171 @@
+openapi: 3.1.1
+info:
+  title: Minha API
+  description: Projeto de uma API REST usando ExpressJs e Mongoose.
+  version: 0.1.0
+servers:
+  - url: http://localhost:3000/
+    description: Ambiente de Desenvolvimento
+tags:
+  - tarefas
+paths:
+  /tarefas:
+    get:
+      summary: Lista as tarefas
+      tags:
+        - tarefas
+      responses:
+        200:
+          description: Operação com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tarefa'
+        500:
+          description: Erro inesperado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+    post:
+      summary: Cria uma tarefa
+      tags:
+        - tarefas    
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: Estudar Swagger
+      responses:
+        201:
+          description: Tarefa criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tarefa'
+        422:
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        500:
+          description: Erro inesperado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+  /tarefas/id:
+    get:
+      tags:
+        - tarefas    
+      parameters:
+        - in: path
+          name: tarefaId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tarefa'
+        400:
+          content:
+            application/json:
+              schema:
+                type: object
+        404:
+          content:
+            application/json:
+              schema:
+                type: object
+        500:
+          content:
+    put:
+      tags:
+        - tarefas    
+      parameters:
+        - in: path
+          name: tarefaId
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tarefa'
+        400:
+          content:
+            application/json:
+              schema:
+                type: object
+        404:
+          content:
+            application/json:
+              schema:
+                type: object
+        422:
+          content:
+            application/json:
+              schema:
+                type: object
+        500:
+          content:
+    delete:
+      tags:
+        - tarefas    
+      parameters:
+        - in: path
+          name: tarefaId
+          schema:
+            type: string
+          required: true
+      responses:
+        204:
+          content:
+            application/json:  
+              schema:
+                type: object
+        400:
+          content:
+            application/json:
+              schema:
+                type: object
+        404:
+          content:
+            application/json:
+              schema:
+                type: object
+        500:
+          content:
+components:
+  schemas:
+    Tarefa:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        concluida:
+          type: boolean
+    Erro:
+      type: object
+      properties:
+        msg:
+          type: string
